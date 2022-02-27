@@ -36,6 +36,7 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
+RUN chmod u+x *.sh
 
 STOPSIGNAL SIGINT
-ENTRYPOINT ["python", "app.py"]
+ENTRYPOINT ["./entrypoint.sh"]

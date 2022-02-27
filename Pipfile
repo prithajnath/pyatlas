@@ -7,9 +7,11 @@ verify_ssl = true
 
 [packages]
 python-twitter = "*"
-sqlalchemy = "*"
+sqlalchemy = {extras = ["asyncio"], version = "*"}
 alembic = "*"
 psycopg2 = "*"
+"discord.py" = "*"
+asyncpg = "*"
 
 [requires]
 python_version = "3.8"

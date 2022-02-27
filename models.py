@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, DateTime, Boolean
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
@@ -20,9 +20,12 @@ class Status(Base):
 
 
 class User(Base):
+    """This is a Discord user. Not a Twitter user"""
+
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
+    discord_id = Column(String, unique=True)
     subscriptions = relationship(
         "Subscription", secondary=user_subscription, back_populates="users"
     )
@@ -32,6 +35,8 @@ class Subscription(Base):
     __tablename__ = "subscriptions"
     id = Column(Integer, primary_key=True)
     text = Column(String)
+    active = Column(Boolean)
+    channel_id = Column(String)
     users = relationship(
         "User", secondary=user_subscription, back_populates="subscriptions"
     )
