@@ -152,24 +152,25 @@ class Twitter:
                     ),
                 )
 
-                twitter_status = statuses.pop()
-                # Check if this is new
+                if statuses:
+                    twitter_status = statuses.pop()
+                    # Check if this is new
 
-                async with self.async_db_session() as session:
-                    # Remember that we store these Twitter IDs as varchars
-                    q = select(Status).where(
-                        Status.twitter_id == str(twitter_status.id)
-                    )
-                    result = await session.execute(q)
-                    status = list(result.scalars())
+                    async with self.async_db_session() as session:
+                        # Remember that we store these Twitter IDs as varchars
+                        q = select(Status).where(
+                            Status.twitter_id == str(twitter_status.id)
+                        )
+                        result = await session.execute(q)
+                        status = list(result.scalars())
 
-                    if not status:
-                        # This tweet is new to us so we need to record it
-                        new_status = Status(twitter_id=str(twitter_status.id))
-                        session.add_all([new_status])
-                        await session.commit()
+                        if not status:
+                            # This tweet is new to us so we need to record it
+                            new_status = Status(twitter_id=str(twitter_status.id))
+                            session.add_all([new_status])
+                            await session.commit()
 
-                        # Now return the status URL
-                        return self._status_url(twitter_status)
+                            # Now return the status URL
+                            return self._status_url(twitter_status)
 
         return False
